@@ -1,4 +1,4 @@
-# frontend_datatable
+# vuejs datatable
 
 ## Project setup
 ```
