@@ -1,18 +1,38 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+    <div class="home">
+        <Datatable :options="tableOptions"/>
+    </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+    // @ is an alias to /src
+    import Datatable from '@/components/Datatable.vue'
 
-export default {
-  name: 'Home',
-  components: {
-    HelloWorld
-  }
-}
+    export default {
+        name: 'Home',
+        components: {
+            Datatable
+        },
+        data() {
+            return {
+                tableOptions : {
+                    tableName: 'users',
+                    columns: [
+                        {title: 'Name', key: 'name', type: 'clickable',source:'users', uniqueField:'id', sortable: true},
+                        {title: 'Age', key: 'age', type: 'text', sortable: true},
+                        {title: 'Salary', key: 'salary', type: 'text', sortable: false},
+                        // {title: 'Action',  type: 'component', name:'home-action'},
+
+                    ],
+                    source: 'users',
+                    search: true,
+                },
+            }
+        }
+    }
 </script>
+<style lang="scss" scoped>
+    .home{
+        margin:20px;
+    }
+</style>
