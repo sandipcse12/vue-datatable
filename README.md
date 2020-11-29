@@ -1,4 +1,4 @@
-# vuejs datatable
+# Vue.js datatable
 
 ## Project setup
 ```
