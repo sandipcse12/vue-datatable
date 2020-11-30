@@ -1,9 +1,18 @@
 <template>
     <div>
-        <i class="las la-battery-three-quarters"></i>
+        <div class="search">
+            <input type="text" style="float:right" placeholder="Search here" id="search" @keyup="search" v-model="requestParams.search">
+            Show <select class="form-control" v-model="showDataAmount" @change="selectedDataAmount" id="rows">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="500">500</option>
+            </select> rows
+        </div>
         <table id="datatable">
             <thead>
-            <th v-for="(column,columnIndex) in options.columns" :key="columnIndex">
+            <th v-for="(column,columnIndex) in options.columns" :style="{'text-align':column.textAlign}" :key="columnIndex">
                 <span>{{ column.title }}</span>
                 <span style="float: right"
                       v-if="requestParams.sortedKey === column.key && requestParams.sortedType === 'asc'">
@@ -23,12 +32,19 @@
             <tbody>
             <template v-if="dataSets.length > 0">
                 <tr v-for="(data,dataIndex) in dataSets" :key="dataIndex">
-                    <td v-for="(column,columnIndex) in options.columns" :key="columnIndex">
+                    <td v-for="(column,columnIndex) in options.columns" :key="columnIndex" :style="{'text-align':column.textAlign}" >
                                         <span v-if="column.type === 'component'">
                                             <component :is="column.name" :row="data"></component>
                                         </span>
                         <span v-else-if="column.type === 'clickable'">
-                                            <a style="text-decoration: none" :href="column.source+'/'+data[column.uniqueField]">{{data[column.key]}}</a>
+                                            <a style="text-decoration: none"
+                                               :href="column.source+'/'+data[column.uniqueField]">{{data[column.key]}}</a>
+                                        </span>
+                        <span v-else-if="column.currencyFormat">
+                                              {{currencyFormat(data[column.key],column.currencyConfig)}}
+                                        </span>
+                        <span v-else-if="column.dateFormat">
+                                              {{dateFormat(data[column.key],column.currentFormat,column.expectFormat)}}
                                         </span>
                         <span v-else>
                                               {{data[column.key]}}
@@ -56,6 +72,9 @@
 
 <script>
     const axios = require('axios');
+    const formatCurrency = require('format-currency');
+    import moment from 'moment';
+
     export default {
         props: ['options'],
         data() {
@@ -80,6 +99,12 @@
             this.readData();
         },
         methods: {
+            currencyFormat(value, config) {
+                return formatCurrency(value, config);
+            },
+            dateFormat(date, currentConfig, expectedConfig) {
+                return moment(date, currentConfig).format(expectedConfig);
+            },
             sortedKeyValue(key, type) {
                 this.requestParams.sortedKey = key;
                 this.requestParams.sortedType = type;
@@ -87,7 +112,7 @@
             },
             readData() {
                 let instance = this;
-                axios.post('http://demo.datatable/api/users', this.requestParams)
+                axios.post(this.options.source, this.requestParams)
                     .then(function (response) {
                         instance.dataSets = response.data.data;
                         instance.totalCount = response.data.count;
@@ -146,6 +171,16 @@
     }
 </script>
 <style lang="scss" scoped>
+    select,input[type=text] {
+       // width: 100%;
+        padding: 6px 12px;
+        margin: 8px 0;
+        border: 1px solid #f1f1f1;
+        box-sizing: border-box;
+    }
+    input:focus{
+        border: 1px solid #f1f1f1 !important;
+    }
     #datatable {
         font-family: Arial, Helvetica, sans-serif;
         border-collapse: collapse;
@@ -186,7 +221,7 @@
     .pagination a.active {
         background-color: #f1f1f1;
         //color: white;
-       // border: 1px solid #4CAF50;
+        // border: 1px solid #4CAF50;
     }
 
     .pagination a:hover:not(.active) {
