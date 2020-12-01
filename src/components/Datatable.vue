@@ -1,18 +1,20 @@
 <template>
     <div>
         <div class="search">
-            <input type="text" style="float:right" placeholder="Search here" id="search" @keyup="search" v-model="requestParams.search">
+            <input type="text" style="float:right" placeholder="Search here" id="search" @keyup="search"
+                   v-model="requestParams.search">
             Show <select class="form-control" v-model="showDataAmount" @change="selectedDataAmount" id="rows">
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-                <option value="500">500</option>
-            </select> rows
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="500">500</option>
+        </select> rows
         </div>
         <table id="datatable">
             <thead>
-            <th v-for="(column,columnIndex) in options.columns" :style="{'text-align':column.textAlign}" :key="columnIndex">
+            <th v-for="(column,columnIndex) in options.columns" :style="{'text-align':column.textAlign}"
+                :key="columnIndex">
                 <span>{{ column.title }}</span>
                 <span style="float: right"
                       v-if="requestParams.sortedKey === column.key && requestParams.sortedType === 'asc'">
@@ -34,7 +36,8 @@
             <tbody>
             <template v-if="dataSets.length > 0">
                 <tr v-for="(data,dataIndex) in dataSets" :key="dataIndex">
-                    <td v-for="(column,columnIndex) in options.columns" :key="columnIndex" :style="{'text-align':column.textAlign}" >
+                    <td v-for="(column,columnIndex) in options.columns" :key="columnIndex"
+                        :style="{'text-align':column.textAlign}">
                                         <span v-if="column.type === 'component'">
                                             <component :is="column.name" :row="data"></component>
                                         </span>
@@ -173,16 +176,36 @@
     }
 </script>
 <style lang="scss" scoped>
-    select,input[type=text] {
-       // width: 100%;
-        padding: 6px 12px;
+    input[type=text] {
+        // width: 100%;
+        padding: 8px 12px;
         margin: 8px 0;
         border: 1px solid #f1f1f1;
         box-sizing: border-box;
     }
-    input:focus{
-        border: 1px solid #f1f1f1 !important;
+
+    select {
+        // width: 100%;
+        padding: 5px 12px;
+        margin: 8px 0;
+        //border: 1px solid #f1f1f1;
+        box-sizing: border-box;
+        outline: none !important;
+        border: 1px solid #dddddd;
+        background: #fff;
     }
+
+    input:focus {
+        border: 1px solid #dddddd !important;
+        outline: none;
+    }
+
+    select:focus {
+        outline: none !important;
+        border: 1px solid #dddddd;
+        background: #fff;
+    }
+
     #datatable {
         font-family: Arial, Helvetica, sans-serif;
         border-collapse: collapse;
