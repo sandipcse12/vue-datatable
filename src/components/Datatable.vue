@@ -16,15 +16,17 @@
                 <span>{{ column.title }}</span>
                 <span style="float: right"
                       v-if="requestParams.sortedKey === column.key && requestParams.sortedType === 'asc'">
-                                    <a href="javascript:" @click="sortedKeyValue(column.key,'desc')"><i
-                                            class="las la-sort-up"></i></a></span>
+                                    <a href="javascript:" @click="sortedKeyValue(column.key,'desc')">
+                                        <img src="../assets/up.png" alt="up.png">
+                                    </a></span>
                 <span style="float: right"
                       v-else-if="requestParams.sortedKey === column.key && requestParams.sortedType === 'desc'">
-                                    <a href="javascript:" @click="sortedKeyValue(column.key,'asc')"><i
-                                            class="las la-sort-down"></i></a></span>
+                                    <a href="javascript:" @click="sortedKeyValue(column.key,'asc')">
+                                        <img src="../assets/down.png" alt="down.png">
+                                    </a></span>
                 <span style="float: right" v-else-if="column.sortable">
                                      <a href="javascript:" @click="sortedKeyValue(column.key,'desc')">
-                                    <i class="las la-sort"></i>
+                                   <img src="../assets/sort.png" alt="sort.png">
                                      </a>
                                 </span>
             </th>
